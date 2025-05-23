@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Sindoor: Wings of Resolve</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Prevent scrollbars */
+            background-color: #0d1117; /* Dark background for cinematic feel */
+            color: #e2e8f0; /* Light text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            margin: 0;
+        }
+
+        .story-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px; /* Max width for larger screens */
+            aspect-ratio: 16 / 9; /* Standard video aspect ratio */
+            background-color: #1a202c; /* Slightly lighter background for the content area */
+            border-radius: 1rem; /* Rounded corners */
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            text-align: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .scene.active {
+            opacity: 1;
+        }
+
+        .scene-text {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #cbd5e0;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .sub-text {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #a0aec0;
+            max-width: 80%;
+            margin: 0 auto;
+            line-height: 1.4;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Specific animations for aircraft */
+        .aircraft-icon {
+            position: absolute;
+            font-size: 4rem; /* Larger for impact */
+            color: #63b3ed; /* Blue for IAF */
+            text-shadow: 0 0 10px rgba(99, 179, 237, 0.8);
+            animation: flyIn 2s forwards ease-out;
+        }
+
+        .aircraft-icon.rafale { top: 20%; left: -10%; animation-delay: 0.5s; }
+        .aircraft-icon.sukhoi { top: 50%; left: -15%; animation-delay: 1s; }
+        .aircraft-icon.mirage { top: 80%; left: -5%; animation-delay: 1.5s; }
+
+        @keyframes flyIn {
+            from { transform: translateX(-100vw) rotate(-10deg); opacity: 0; }
+            to { transform: translateX(0) rotate(0deg); opacity: 1; }
+        }
+
+        .target-icon {
+            position: absolute;
+            font-size: 3rem;
+            color: #f56565; /* Red for targets */
+            opacity: 0;
+            animation: pulseTarget 1s infinite alternate, fadeIn 1s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulseTarget {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .air-defense-icon {
+            position: absolute;
+            font-size: 3.5rem;
+            color: #48bb78; /* Green for defense */
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        .air-defense-icon.s400 { bottom: 10%; left: 20%; animation-delay: 0.5s; }
+        .air-defense-icon.mrsam { bottom: 15%; right: 25%; animation-delay: 1s; }
+
+        .interception-line {
+            position: absolute;
+            background-color: #a0aec0;
+            height: 4px;
+            width: 0;
+            transform-origin: left center;
+            opacity: 0;
+            animation: drawLine 1s forwards ease-out;
+        }
+
+        @keyframes drawLine {
+            from { width: 0; opacity: 0; }
+            to { width: 100px; opacity: 1; } /* Adjust width as needed */
+        }
+
+        .iaf-emblem {
+            font-size: 8rem;
+            color: #ecc94b; /* Gold/yellow for emblem */
+            animation: rotateIn 2s forwards ease-out;
+        }
+
+        @keyframes rotateIn {
+            from { transform: scale(0.5) rotateY(180deg); opacity: 0; }
+            to { transform: scale(1) rotateY(0deg); opacity: 1; }
+        }
+
+        .flag-icon {
+            font-size: 6rem;
+            animation: slideUp 1.5s forwards ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .scene-text {
+                font-size: 1.8rem;
+            }
+            .sub-text {
+                font-size: 1.1rem;
+                max-width: 90%;
+            }
+            .aircraft-icon, .target-icon, .air-defense-icon {
+                font-size: 2.5rem;
+            }
+            .iaf-emblem {
+                font-size: 5rem;
+            }
+            .flag-icon {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="story-container">
+        <div id="scene1" class="scene">
+            <div class="scene-text">The Catalyst</div>
+            <div class="sub-text">May 7, 2025: A heinous terror attack in Pahalgam claims innocent lives.</div>
+            <span class="text-6xl" role="img" aria-label="broken heart">💔</span>
+        </div>
+
+        <div id="scene2" class="scene">
+            <div class="scene-text">India's Unwavering Resolve</div>
+            <div class="sub-text">India's leadership stands united, resolving a firm, calibrated response.</div>
+            <span class="flag-icon" role="img" aria-label="Indian Flag">🇮🇳</span>
+        </div>
+
+        <div id="scene3" class="scene">
+            <div class="scene-text">IAF Takes Flight: Precision Strikes</div>
+            <div class="sub-text">May 8-10, 2025: Indian Air Force launches high-impact precision strikes.</div>
+            <span class="aircraft-icon rafale" role="img" aria-label="aircraft">✈️</span>
+            <span class="aircraft-icon sukhoi" style="top: 40%; left: -10%; animation-delay: 1s;" role="img" aria-label="aircraft">🚀</span>
+            <span class="aircraft-icon mirage" style="top: 70%; left: -5%; animation-delay: 1.5s;" role="img" aria-label="aircraft">🛩️</span>
+            <div class="sub-text mt-4">Targets: 11 Pakistani military airbases, leveraging BrahMos, SCALP, Hammer, Spice-2000 for standoff accuracy.</div>
+            <span class="target-icon" style="top: 25%; right: 20%; animation-delay: 2.5s;">🎯</span>
+            <span class="target-icon" style="top: 60%; left: 25%; animation-delay: 3s;">🎯</span>
+        </div>
+
+        <div id="scene4" class="scene">
+            <div class="scene-text">Air Defense Dominance: An Impenetrable Shield</div>
+            <div class="sub-text">Pakistan's retaliatory drone and UCAV attacks are neutralized by India's multi-layered air defense.</div>
+            <span class="air-defense-icon s400" role="img" aria-label="radar">📡</span>
+            <span class="air-defense-icon mrsam" style="bottom: 20%; right: 20%; animation-delay: 1s;" role="img" aria-label="missile">🛡️</span>
+            <span class="text-5xl absolute top-10 right-10 opacity-0" style="animation: fadeIn 1s forwards 2s;" role="img" aria-label="drone">🛸</span>
+            <span class="text-5xl absolute top-20 left-10 opacity-0" style="animation: fadeIn 1s forwards 2.5s;" role="img" aria-label="drone">🛸</span>
+            <div class="interception-line" style="top: 15%; left: 30%; transform: rotate(45deg); animation-delay: 3s;"></div>
+            <div class="interception-line" style="top: 30%; right: 35%; transform: rotate(-60deg); animation-delay: 3.5s;"></div>
+        </div>
+
+        <div id="scene5" class="scene">
+            <div class="scene-text">Inter-Service Synergy: One Force</div>
+            <div class="sub-text">Operation Sindoor: A tri-services triumph across land, air, and sea.</div>
+            <div class="flex space-x-8 mt-8">
+                <span class="text-6xl opacity-0" style="animation: fadeIn 1s forwards 0.5s;" role="img" aria-label="tank">🪖</span>
+                <span class="text-6xl opacity-0" style="animation: fadeIn 1s forwards 1s;" role="img" aria-label="ship">🚢</span>
+                <span class="text-6xl opacity-0" style="animation: fadeIn 1s forwards 1.5s;" role="img" aria-label="aircraft">✈️</span>
+            </div>
+            <div class="sub-text mt-4">Indian Navy asserts maritime dominance; BSF thwarts infiltrations.</div>
+        </div>
+
+        <div id="scene6" class="scene">
+            <div class="scene-text">A Strategic Statement: Unmatched Air Superiority</div>
+            <div class="sub-text">Aggression will be met with decisive action. The Indian Air Force: a symbol of national resolve.</div>
+            <div class="flex justify-center items-center mt-8 relative w-full h-48">
+                <span class="aircraft-icon" style="position: absolute; top: 0; left: 0; animation: flyAcross 6s infinite linear; animation-delay: 0s;" role="img" aria-label="aircraft">✈️</span>
+                <span class="aircraft-icon" style="position: absolute; top: 20%; left: 10%; animation: flyAcross 6s infinite linear; animation-delay: 0.5s;" role="img" aria-label="aircraft">✈️</span>
+                <span class="aircraft-icon" style="position: absolute; top: 40%; left: 20%; animation: flyAcross 6s infinite linear; animation-delay: 1s;" role="img" aria-label="aircraft">✈️</span>
+            </div>
+            <style>
+                @keyframes flyAcross {
+                    0% { transform: translateX(-100%); opacity: 0; }
+                    20% { opacity: 1; }
+                    80% { opacity: 1; }
+                    100% { transform: translateX(200%); opacity: 0; }
+                }
+            </style>
+        </div>
+
+        <div id="scene7" class="scene">
+            <div class="scene-text">Operation Sindoor: A Defining Moment</div>
+            <span class="iaf-emblem" role="img" aria-label="Indian Air Force Emblem">🦅</span>
+            <div class="sub-text mt-4">The wings of the Indian Air Force continue to soar, a beacon of strength and dominance in our skies.</div>
+            <div class="scene-text mt-8">Jai Hind!</div>
+        </div>
+    </div>
+
+    <script>
+        const scenes = [
+            'scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6', 'scene7'
+        ];
+        let currentSceneIndex = 0;
+
+        // Function to show a specific scene
+        function showScene(index) {
+            // Hide all scenes first
+            scenes.forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+
+            // Show the current scene
+            const currentScene = document.getElementById(scenes[index]);
+            if (currentScene) {
+                currentScene.classList.add('active');
+                // Re-trigger animations by briefly removing and adding classes
+                currentScene.querySelectorAll('.aircraft-icon, .target-icon, .air-defense-icon, .flag-icon, .iaf-emblem, .interception-line, .text-6xl, .text-5xl').forEach(el => {
+                    // Clone the element to restart its animation
+                    const newEl = el.cloneNode(true);
+                    el.parentNode.replaceChild(newEl, el);
+                });
+            }
+        }
+
+        // Function to advance to the next scene
+        function nextScene() {
+            currentSceneIndex++;
+            if (currentSceneIndex < scenes.length) {
+                showScene(currentSceneIndex);
+            } else {
+                // Loop back to the beginning or end the story
+                currentSceneIndex = 0; // Loop for demonstration
+                showScene(currentSceneIndex);
+            }
+        }
+
+        // Initial display of the first scene
+        window.onload = () => {
+            showScene(currentSceneIndex);
+            // Set intervals for scene transitions
+            // Adjust timing as needed for readability and visual impact
+            setTimeout(() => { nextScene(); }, 6000); // Scene 1
+            setTimeout(() => { nextScene(); }, 12000); // Scene 2
+            setTimeout(() => { nextScene(); }, 20000); // Scene 3 (longer for animations)
+            setTimeout(() => { nextScene(); }, 28000); // Scene 4 (longer for animations)
+            setTimeout(() => { nextScene(); }, 34000); // Scene 5
+            setTimeout(() => { nextScene(); }, 42000); // Scene 6 (longer for continuous animation)
+            setTimeout(() => { nextScene(); }, 48000); // Scene 7 (final scene, then loops)
+        };
+
+        // Optional: Add click listener to advance scenes manually for testing/user control
+        document.querySelector('.story-container').addEventListener('click', nextScene);
+    </script>
+</body>
+</html>
